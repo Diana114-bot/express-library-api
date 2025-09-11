@@ -1,74 +1,57 @@
-import { Router, Request, Response, NextFunction } from "express";
-import { authors, Author } from "../models/author";
+import { Router, Request, Response } from "express";
+import { authors } from "../models/author";
+import { books } from "../models/book";
 
 const router = Router();
 
+// GET /authors/:id/books with query support
+router.get("/:id/books", (req: Request, res: Response) => {
+  const authorId = Number(req.params.id);
 
-router.get("/", (req: Request, res: Response) => {
-  res.status(200).json(authors);
-});
-
-
-router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
-  const author = authors.find(a => a.id === Number(req.params.id));
+  // Check if author exists
+  const author = authors.find(a => a.id === authorId);
   if (!author) {
-    const error: any = new Error("Author not found");
-    error.status = 404;
-    return next(error);
-  }
-  res.status(200).json(author);
-});
-
-router.post("/", (req: Request, res: Response, next: NextFunction) => {
-  const { name } = req.body;
-  if (!name || typeof name !== "string") {
-    const error: any = new Error("Name is required and must be a string");
-    error.status = 400;
-    return next(error);
+    return res.status(404).json({ message: "Author not found" });
   }
 
-  const exists = authors.some(a => a.name === name);
-  if (exists) {
-    const error: any = new Error("Author already exists");
-    error.status = 409;
-    return next(error);
+  // Get books by this author
+  let result = books.filter(b => b.authorId === authorId);
+
+  // 🔎 Filtering by year
+  if (req.query.year) {
+    result = result.filter(b => b.year === Number(req.query.year));
   }
 
-  const newAuthor: Author = { id: authors.length + 1, name };
-  authors.push(newAuthor);
-  res.status(201).json(newAuthor);
-});
-
-
-router.put("/:id", (req: Request, res: Response, next: NextFunction) => {
-  const author = authors.find(a => a.id === Number(req.params.id));
-  if (!author) {
-    const error: any = new Error("Author not found");
-    error.status = 404;
-    return next(error);
+  // 🔎 Searching by title
+  if (req.query.search) {
+    const search = (req.query.search as string).toLowerCase();
+    result = result.filter(b => b.title.toLowerCase().includes(search));
   }
 
-  if (!req.body.name || typeof req.body.name !== "string") {
-    const error: any = new Error("Name is required and must be a string");
-    error.status = 400;
-    return next(error);
+  // 🔎 Sorting
+  if (req.query.sortBy) {
+    const sortBy = req.query.sortBy as string;
+    result.sort((a, b) => {
+      if (sortBy === "title") return a.title.localeCompare(b.title);
+      if (sortBy === "year") return a.year - b.year;
+      return 0;
+    });
   }
 
-  author.name = req.body.name;
-  res.status(200).json(author);
-});
+  // 🔎 Pagination
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 5;
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const paginated = result.slice(start, end);
 
-
-router.delete("/:id", (req: Request, res: Response, next: NextFunction) => {
-  const index = authors.findIndex(a => a.id === Number(req.params.id));
-  if (index === -1) {
-    const error: any = new Error("Author not found");
-    error.status = 404;
-    return next(error);
-  }
-
-  const deleted = authors.splice(index, 1);
-  res.status(200).json(deleted[0]);
+  res.status(200).json({
+    author,
+    total: result.length,
+    page,
+    limit,
+    data: paginated
+  });
 });
 
 export default router;
