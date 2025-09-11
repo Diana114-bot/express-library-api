@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import authorRoutes from "./routes/authorRoutes";
 import { logger } from "./middleware/logger";
+import bookRoutes from "./routes/bookRoutes";
 
 const app = express();
 const PORT = 3000;
@@ -16,10 +17,12 @@ app.get("/", (req: Request, res: Response) => {
 
 
 app.use("/authors", authorRoutes);
+app.use("/books", bookRoutes);
 
 app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "Route not found" });
 });
+
 
 
 app.listen(PORT, () => {
