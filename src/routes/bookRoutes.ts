@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { books, Book } from "../models/book";
 import { validateBook } from "../middleware/validateBook";
 
@@ -10,15 +10,26 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 
-router.get("/:id", (req: Request, res: Response) => {
+router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
   const book = books.find(b => b.id === Number(req.params.id));
-  if (!book) return res.status(404).json({ message: "Book not found" });
+  if (!book) {
+    const error: any = new Error("Book not found");
+    error.status = 404;
+    return next(error);
+  }
   res.status(200).json(book);
 });
 
 
-router.post("/", validateBook, (req: Request, res: Response) => {
+router.post("/", validateBook, (req: Request, res: Response, next: NextFunction) => {
   const { title, year, authorId } = req.body;
+
+  const exists = books.some(b => b.title === title && b.authorId === authorId);
+  if (exists) {
+    const error: any = new Error("Book already exists for this author");
+    error.status = 409;
+    return next(error);
+  }
 
   const newBook: Book = {
     id: books.length + 1,
@@ -32,9 +43,13 @@ router.post("/", validateBook, (req: Request, res: Response) => {
 });
 
 
-router.put("/:id", validateBook, (req: Request, res: Response) => {
+router.put("/:id", validateBook, (req: Request, res: Response, next: NextFunction) => {
   const book = books.find(b => b.id === Number(req.params.id));
-  if (!book) return res.status(404).json({ message: "Book not found" });
+  if (!book) {
+    const error: any = new Error("Book not found");
+    error.status = 404;
+    return next(error);
+  }
 
   book.title = req.body.title;
   book.year = req.body.year;
@@ -43,10 +58,13 @@ router.put("/:id", validateBook, (req: Request, res: Response) => {
   res.status(200).json(book);
 });
 
-
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", (req: Request, res: Response, next: NextFunction) => {
   const index = books.findIndex(b => b.id === Number(req.params.id));
-  if (index === -1) return res.status(404).json({ message: "Book not found" });
+  if (index === -1) {
+    const error: any = new Error("Book not found");
+    error.status = 404;
+    return next(error);
+  }
 
   const deleted = books.splice(index, 1);
   res.status(200).json(deleted[0]);
