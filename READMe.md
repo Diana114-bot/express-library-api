@@ -19,6 +19,7 @@ Steps for testing.
   3.Open Visual Studio Code(Install it if you do not have it):
     code .
   4.Install all the dependancies by running the following commands on your VS Code terminal:
+     git checkout dev
     npm install express
     npm install express helmet express-rate-limit
     npm install 
