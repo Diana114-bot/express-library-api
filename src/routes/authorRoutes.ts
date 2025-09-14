@@ -8,7 +8,6 @@ const router = Router();
 router.get("/:id/books", (req: Request, res: Response) => {
   const authorId = Number(req.params.id);
 
- 
   const author = authors.find(a => a.id === authorId);
   if (!author) {
     return res.status(404).json({ message: "Author not found" });
@@ -28,7 +27,7 @@ router.get("/:id/books", (req: Request, res: Response) => {
     result = result.filter(b => b.title.toLowerCase().includes(search));
   }
 
- 
+
   if (req.query.sortBy) {
     const sortBy = req.query.sortBy as string;
     result.sort((a, b) => {
