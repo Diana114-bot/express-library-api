@@ -8,7 +8,6 @@ const router = Router();
 router.get("/:id/books", (req: Request, res: Response) => {
   const authorId = Number(req.params.id);
 
-
   const author = authors.find(a => a.id === authorId);
   if (!author) {
     return res.status(404).json({ message: "Author not found" });
