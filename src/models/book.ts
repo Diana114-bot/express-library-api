@@ -7,6 +7,6 @@ export interface Book {
 
 
 export const books: Book[] = [
-  { id: 1, title: "1984", year: 1949, authorId: 1 },
-  { id: 2, title: "Harry Potter and the Philosopher's Stone", year: 1997, authorId: 2 }
+  { id: 1, title: "Why did i get married?", year: 2020, authorId: 1 },
+  { id: 2, title: "The three body parts.", year: 2018, authorId: 2 }
 ];

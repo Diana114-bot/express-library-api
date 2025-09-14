@@ -1,49 +1,56 @@
 import { Router, Request, Response } from "express";
-import { authors, Author } from "../models/author";
+import { authors } from "../models/author";
+import { books } from "../models/book";
 
 const router = Router();
 
 
+router.get("/:id/books", (req: Request, res: Response) => {
+  const authorId = Number(req.params.id);
 
-router.get("/", (req, res) => {
-  res.status(200).json(authors); 
-});
+  const author = authors.find(a => a.id === authorId);
+  if (!author) {
+    return res.status(404).json({ message: "Author not found" });
+  }
 
+ 
+  let result = books.filter(b => b.authorId === authorId);
 
-router.get("/:id", (req, res) => {
-  const author = authors.find(a => a.id === Number(req.params.id));
-  if (!author) return res.status(404).json({ message: "Author not found" });
-  res.status(200).json(author);
-});
+ 
+  if (req.query.year) {
+    result = result.filter(b => b.year === Number(req.query.year));
+  }
 
-
-router.post("/", (req, res) => {
-  const { name, bio } = req.body;
-  if (!name) return res.status(400).json({ message: "Name is required" });
-
-  const newAuthor = { id: authors.length + 1, name, bio };
-  authors.push(newAuthor);
-  res.status(201).json(newAuthor);
-});
-
-
-router.put("/:id", (req, res) => {
-  const author = authors.find(a => a.id === Number(req.params.id));
-  if (!author) return res.status(404).json({ message: "Author not found" });
-
-  author.name = req.body.name ?? author.name;
-  author.bio = req.body.bio ?? author.bio;
-
-  res.status(200).json(author);
-});
+ 
+  if (req.query.search) {
+    const search = (req.query.search as string).toLowerCase();
+    result = result.filter(b => b.title.toLowerCase().includes(search));
+  }
 
 
-router.delete("/:id", (req, res) => {
-  const index = authors.findIndex(a => a.id === Number(req.params.id));
-  if (index === -1) return res.status(404).json({ message: "Author not found" });
+  if (req.query.sortBy) {
+    const sortBy = req.query.sortBy as string;
+    result.sort((a, b) => {
+      if (sortBy === "title") return a.title.localeCompare(b.title);
+      if (sortBy === "year") return a.year - b.year;
+      return 0;
+    });
+  }
 
-  const deleted = authors.splice(index, 1);
-  res.status(200).json(deleted[0]);
+ 
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 5;
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const paginated = result.slice(start, end);
+
+  res.status(200).json({
+    author,
+    total: result.length,
+    page,
+    limit,
+    data: paginated
+  });
 });
 
 export default router;
