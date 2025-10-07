@@ -22,10 +22,12 @@ The API will support CRUD (Create, Read, Update, Delete) operations, validation,
   3. Open Visual Studio Code(Install it if you do not have it):
     ``` code . ```
   4. Install all the dependancies by running the following commands on your VS Code terminal:
-    ```  git checkout dev ```
+   # 
+     git checkout dev
+   #
     ``` npm install ```
   
-  5. Run the server command:
+  6. Run the server command:
 
    ``` npm run dev ```
 
