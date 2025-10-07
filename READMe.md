@@ -27,7 +27,7 @@ The API will support CRUD (Create, Read, Update, Delete) operations, validation,
    #
     npm install 
   
-  6. Run the server command:
+  5. Run the server command:
 
    ``` npm run dev ```
 
@@ -36,11 +36,11 @@ The API will support CRUD (Create, Read, Update, Delete) operations, validation,
   ### 1. Install Postman(If you do no have it)
   #
       Open a browser and go to getpostman.com (or search “Postman”).
-      #
+      
       Download the app for your OS (Windows / macOS / Linux) or use the Postman web version.
-      #
+      
       Run the installer and open Postman.
-      #
+      
       You may create/sign into an account or skip sign-in (you can test without signing in).
 
 ## Testing Core Features 
@@ -48,10 +48,15 @@ The API will support CRUD (Create, Read, Update, Delete) operations, validation,
 ### 1. Create New Author
 
 Endpoint: POST /authors
+
 POST (create) — JSON body
+
 Method: POST
+
 URL:http://localhost:3000/authors
+
 Headers: Content-Type: application/json
+
 Body tab → select raw → choose JSON → enter:
 {
   "name": "Zee",
