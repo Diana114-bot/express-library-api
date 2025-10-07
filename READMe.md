@@ -5,8 +5,11 @@ The API will support CRUD (Create, Read, Update, Delete) operations, validation,
 
 ## Librarians need to:
 ○ Add new titles and authors.
+#
 ○ Search books by title, author, or year.
+#
 ○ Correct/update book details.
+#
 ○ Delete historical records.
 
 ### Steps for testing.
@@ -20,7 +23,6 @@ The API will support CRUD (Create, Read, Update, Delete) operations, validation,
     ``` code . ```
   4. Install all the dependancies by running the following commands on your VS Code terminal:
     ```  git checkout dev ```
-    ###
     ``` npm install ```
   
   5. Run the server command:
