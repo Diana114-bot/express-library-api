@@ -25,7 +25,7 @@ The API will support CRUD (Create, Read, Update, Delete) operations, validation,
    # 
      git checkout dev
    #
-    ``` npm install ```
+    npm install 
   
   6. Run the server command:
 
