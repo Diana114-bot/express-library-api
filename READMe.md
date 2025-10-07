@@ -5,11 +5,11 @@ The API will support CRUD (Create, Read, Update, Delete) operations, validation,
 
 ## Librarians need to:
 ○ Add new titles and authors.
-#
+
 ○ Search books by title, author, or year.
-#
+
 ○ Correct/update book details.
-#
+
 ○ Delete historical records.
 
 ### Steps for testing.
@@ -58,118 +58,162 @@ URL:http://localhost:3000/authors
 Headers: Content-Type: application/json
 
 Body tab → select raw → choose JSON → enter:
+
 {
   "name": "Zee",
   "bio": "Author bio..."
 }
+
 Click Send
 
 ### 2. List All Authors
 
  Endpoint: GET /authors
+ 
  GET all authors
+ 
  Method: GET
+ 
  URL:http://localhost:3000/authors
+ 
  Click Send
 
  ### 3. Get Author By ID
 
   Endpoint: GET /authors/:id
+  
   Method: GET
+  
   URL:http://localhost:3000/authors/1
+  
   Click Send 
 
   ### 4. Update Author BY ID
     
    Endpoint: PUT /authors/:id
+   
    Method: PUT
+   
    URL:http://localhost:3000/authors/1
+   
    Headers: Content-Type: application/json
+   
    Body tab → select raw → choose JSON → enter:
+   
     {
       "name": "Updated Zee",
       "bio": "Author bio..."
     }
+    
    Click Send
 
    ### 5. Delete Author BY ID
 
     Endpoint: DELETE /authors/:id
+    
     Method: DELETE
+    
     URL:http://localhost:3000/authors/1
+    
     Click send
     
   ### 6. List Books By an Author
 
   Endpoint: GET /authors/:id/books
+  
   Method: GET
+  
   URL:http://localhost:3000/authors/1/books
+  
   Click Send 
 
  ### 7. Create New Book
 
   Endpoint: POST /books
+  
   Method: POST
+  
   URL:http://localhost:3000/books
+  
   Headers: Content-Type: application/json
+
+
   Body tab → select raw → choose JSON → enter:
+  
   {
   "title": "Things Fall Apart",
   "year": 1958,
   "authorId": 1
   }
+  
   Click Send
 
   ### 8. List All Books
 
    Endpoint: GET /books
+   
     Method: GET
+    
     URL:http://localhost:3000/books
+    
     Click Send
 
   ### 9. Get Book By ID
 
     Endpoint: GET /books/:id
+    
     Method: GET
+    
     URL:http://localhost:3000/books/1
+    
     Click Send
 
  ### 10. Update Book By ID
 
     Endpoint: PUT /books/:id
+    
     Method: PUT
+    
     URL:http://localhost:3000/books/1
+    
     Body tab → select raw → choose JSON → enter:
+    
     {
       "title": "Updated Things Fall Apart",
        "year": 2000,
        "authorId": 1
     }
+    
     Click Send
 
  ### 11. Delete Book BY ID
 
   Endpoint: DELETE /books/:id
+  
     Method: DELETE
+    
     URL:http://localhost:3000/books/1
+    
     Click send
 
  ### 12. Optional Query parameters & examples
+ 
         year=2020 — filter by year
-  #
+  
         search=married — case-insensitive title search
-  #
+  
         authorId=1 — filter books by author
-  #      
+       
         sortBy=title or sortBy=year — sorting
-  #     
+       
         page=2&limit=5 — pagination (default: page=1, limit=5)
- #
+ 
    ### Examples:
+   
          GET /books?search=married&sortBy=year&page=1&limit=10
-   #
+   
          GET /authors/1/books?year=2020
-   #
+   
          GET /books?authorId=2&sortBy=title
 
         
